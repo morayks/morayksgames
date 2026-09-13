@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>morayksgames — Minecraft 1.21.11</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root[data-theme="dark"] {
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --border-color: #334155;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #22c55e;
+      --accent-hover: #16a34a;
+      --input-bg: #0f172a;
+      --modal-bg: rgba(15, 23, 42, 0.85);
+      --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+    }
+
+    :root[data-theme="light"] {
+      --bg-color: #f8fafc;
+      --card-bg: #ffffff;
+      --border-color: #e2e8f0;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --accent: #16a34a;
+      --accent-hover: #15803d;
+      --input-bg: #f1f5f9;
+      --modal-bg: rgba(255, 255, 255, 0.85);
+      --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+    }
+
+    :root[data-theme="black"] {
+      --bg-color: #000000;
+      --card-bg: #0d0d0d;
+      --border-color: #222222;
+      --text-main: #ffffff;
+      --text-muted: #888888;
+      --accent: #22c55e;
+      --accent-hover: #16a34a;
+      --input-bg: #000000;
+      --modal-bg: rgba(0, 0, 0, 0.9);
+      --card-shadow: 0 0 0 1px #222222;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+      transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    navbar {
+      width: 100%;
+      max-width: 1200px;
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .brand {
+      font-size: 1.4rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .brand span {
+      color: var(--accent);
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .theme-switcher {
+      display: flex;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 3px;
+      gap: 2px;
+    }
+
+    .theme-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 5px 10px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      border-radius: 16px;
+      cursor: pointer;
+    }
+
+    .theme-btn.active {
+      background: var(--accent);
+      color: #ffffff;
+    }
+
+    .auth-buttons {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .discord-btn {
+      background: #5865F2;
+      color: #ffffff;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+
+    .discord-btn:hover {
+      background: #4752C4;
+    }
+
+    .discord-btn svg {
+      width: 18px;
+      height: 18px;
+      fill: #ffffff;
+    }
+
+    .user-profile-badge {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      padding: 6px 14px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .user-profile-badge:hover {
+      border-color: var(--accent);
+    }
+
+    .avatar-img {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: var(--accent);
+    }
+
+    .main-layout {
+      width: 100%;
+      max-width: 1200px;
+      padding: 30px 20px;
+      display: grid;
+      grid-template-columns: 280px 1fr 280px;
+      gap: 24px;
+    }
+
+    .side-col {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: var(--card-shadow);
+    }
+
+    .card-title {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .hero {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .hero h1 {
+      font-size: 2.4rem;
+      font-weight: 800;
+      margin-bottom: 10px;
+      letter-spacing: -0.03em;
+    }
+
+    .hero p {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    .version-tag {
+      display: inline-block;
+      background: var(--accent);
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.75rem;
+      padding: 3px 8px;
+      border-radius: 6px;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+
+    .ip-box {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--input-bg);
+      padding: 12px 18px;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      font-family: monospace;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+
+    .btn {
+      background: var(--accent);
+      color: #ffffff;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      width: 100%;
+      text-decoration: none;
+      display: inline-block;
+      text-align: center;
+    }
+
+    .btn:hover {
+      background: var(--accent-hover);
+    }
+
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+    }
+
+    .game-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .game-icon {
+      font-size: 1.8rem;
+      margin-bottom: 8px;
+    }
+
+    .game-title {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .game-desc {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+      margin-bottom: 12px;
+    }
+
+    .game-tag {
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 8px;
+      background: var(--input-bg);
+      color: var(--accent);
+      border: 1px solid var(--border-color);
+      align-self: flex-start;
+    }
+
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .stat-row:last-child {
+      border-bottom: none;
+    }
+
+    .faq-item {
+      font-size: 0.8rem;
+      margin-bottom: 10px;
+    }
+
+    .faq-item strong {
+      display: block;
+      color: var(--text-main);
+      margin-bottom: 2px;
+    }
+
+    .faq-item span {
+      color: var(--text-muted);
+    }
+
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--modal-bg);
+      backdrop-filter: blur(5px);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 26px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+      position: relative;
+    }
+
+    .close-modal {
+      position: absolute;
+      top: 18px;
+      right: 20px;
+      background: none;
+      border: none;
+      font-size: 1.2rem;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    .profile-avatar-preview {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin: 0 auto 12px;
+      display: block;
+      border: 2px solid var(--accent);
+    }
+
+    .input-group {
+      margin-bottom: 12px;
+    }
+
+    .input-group label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      background: var(--input-bg);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      outline: none;
+    }
+
+    .auth-status-badge {
+      font-size: 0.75rem;
+      padding: 4px 10px;
+      border-radius: 12px;
+      background: var(--input-bg);
+      border: 1px solid var(--border-color);
+      text-align: center;
+      margin-bottom: 14px;
+    }
+
+    footer {
+      width: 100%;
+      max-width: 1200px;
+      padding: 20px;
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border-color);
+      margin-top: 40px;
+    }
+
+    @media (max-width: 900px) {
+      .main-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <navbar>
+    <div class="brand">morayks<span>games</span></div>
+    
+    <div class="nav-right">
+      <div class="theme-switcher">
+        <button class="theme-btn active" onclick="setTheme('dark')">Dark</button>
+        <button class="theme-btn" onclick="setTheme('light')">Light</button>
+        <button class="theme-btn" onclick="setTheme('black')">Black</button>
+      </div>
+
+      <div class="auth-buttons">
+        <button id="discord-login-btn" class="discord-btn" onclick="loginWithDiscord()">
+          <svg viewBox="0 0 127.14 96.36">
+            <path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1,105.25,105.25,0,0,0,32.19-16.14c2.64-27.38-4.51-51.11-18.9-72.15ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74C48.86,40.23,54,45.92,53.86,53,53.86,60,48.8,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74C91.14,40.23,96.2,45.92,96.07,53,96.07,60,91.08,65.69,84.69,65.69Z"/>
+          </svg>
+          Войти через Discord
+        </button>
+
+        <div id="user-badge" class="user-profile-badge" onclick="openProfileModal()" style="display: none;">
+          <img id="badge-avatar-img" class="avatar-img" src="" alt="Avatar">
+          <span id="badge-username">Игрок</span>
+        </div>
+      </div>
+    </div>
+  </navbar>
+
+  <div class="main-layout">
+    <aside class="side-col">
+      <div class="card">
+        <div class="card-title">🟢 Статус Сервера</div>
+        <div class="stat-row">
+          <span style="color: var(--text-muted);">Статус:</span>
+          <span style="color: var(--accent); font-weight: 600;">Онлайн</span>
+        </div>
+        <div class="stat-row">
+          <span style="color: var(--text-muted);">Игроков:</span>
+          <span>0 / 50</span>
+        </div>
+        <div class="stat-row">
+          <span style="color: var(--text-muted);">Версия:</span>
+          <span style="font-weight: 600;">1.21.11</span>
+        </div>
+        <div class="stat-row">
+          <span style="color: var(--text-muted);">Пинг:</span>
+          <span>~24 ms</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">💬 Сообщество</div>
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px; line-height: 1.4;">
+          Вступление в академию города уродов! Заходи к нам в Discord.
+        </p>
+        <a href="https://discord.com/invite/JMMV8Uv2Rt" target="_blank" class="btn" style="background: #5865F2;">Войти в Discord</a>
+      </div>
+    </aside>
+
+    <main>
+      <div class="hero">
+        <h1>morayksgames <span class="version-tag">1.21.11</span></h1>
+        <p>Подключайтесь к серверу Minecraft и принимайте участие в увлекательных играх прямо сейчас!</p>
+        
+        <div class="card" style="max-width: 480px; margin: 0 auto;">
+          <div class="ip-box">
+            <span id="server-ip">morayks.aternos.me:42242</span>
+          </div>
+          <button class="btn" onclick="copyIP()">Копировать IP адрес</button>
+        </div>
+      </div>
+
+      <div style="font-size: 1.1rem; font-weight: 700; margin-bottom: 15px;">Режимы и игры на сервере</div>
+      
+      <div class="games-grid">
+        <div class="game-card">
+          <div>
+            <div class="game-icon">💎</div>
+            <div class="game-title">Угадай руду</div>
+            <div class="game-desc">Соревнование в чате арены: угадайте руду по первым буквам и свойствам раньше всех.</div>
+          </div>
+          <div class="game-tag">Скорость</div>
+        </div>
+
+        <div class="game-card">
+          <div>
+            <div class="game-icon">🧨</div>
+            <div class="game-title">ТНТ Арена</div>
+            <div class="game-desc">Блоки под ногами выпадают через секунду! Бегайте, прыгайте и не упадите вниз.</div>
+          </div>
+          <div class="game-tag">Выживание</div>
+        </div>
+
+        <div class="game-card">
+          <div>
+            <div class="game-icon">🛒</div>
+            <div class="game-title">ТНТ Вагонетка</div>
+            <div class="game-desc">Динамичная гонка на вагонетках со взрывчаткой. Взорвите соперников на виражах!</div>
+          </div>
+          <div class="game-tag">Гонки</div>
+        </div>
+
+        <div class="game-card">
+          <div>
+            <div class="game-icon">🟩</div>
+            <div class="game-title">Угадай блок</div>
+            <div class="game-desc">Викторина с показом текстур блоков. Кто быстрее угадает — получает очки.</div>
+          </div>
+          <div class="game-tag">Логика</div>
+        </div>
+      </div>
+    </main>
+
+    <aside class="side-col">
+      <div class="card">
+        <div class="card-title">🏆 Лидеры</div>
+        <div class="stat-row">
+          <span>1. Morayks_67_42</span>
+          <span style="color: var(--accent); font-weight: 600;">ТОП-1</span>
+        </div>
+        <div class="stat-row">
+          <span>2. Xelles</span>
+          <span style="color: var(--accent); font-weight: 600;">ТОП-2</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">❓ Помощь & Правила</div>
+        <div class="faq-item">
+          <strong>Как зайти на сервер?</strong>
+          <span>Скопируйте IP выше, откройте Minecraft 1.21.11 и вставьте в сетевой игре.</span>
+        </div>
+        <div class="faq-item">
+          <strong>Нужен ли лицензионный аккаунт?</strong>
+          <span>Нет, вход открыт как для пираток, так и для лицензий!</span>
+        </div>
+      </div>
+    </aside>
+
+  </div>
+
+  <div id="profile-modal" class="modal-overlay">
+    <div class="modal-card">
+      <button class="close-modal" onclick="closeProfileModal()">&times;</button>
+      <div style="font-size: 1.2rem; font-weight: 700; margin-bottom: 8px; text-align: center;">Профиль Игрока</div>
+      
+      <div id="auth-status" class="auth-status-badge">
+        Авторизован через <span style="color: #5865F2; font-weight: 700;">Discord</span>
+      </div>
+
+      <img id="modal-avatar-preview" class="profile-avatar-preview" src="" alt="Preview">
+
+      <div class="input-group">
+        <label>Никнейм на сервере:</label>
+        <input type="text" id="nickname-input" value="" readonly style="opacity: 0.8; cursor: not-allowed;">
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 16px;">
+        <button class="btn" style="background: #ef4444;" onclick="logoutDiscord()">Выйти из Discord</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    &copy; 2026 morayksgames • Minecraft Server 1.21.11. Все права защищены.
+  </footer>
+
+  <script>
+    function setTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      localStorage.setItem('selectedTheme', theme);
+      document.querySelectorAll('.theme-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.innerText.toLowerCase() === theme) btn.classList.add('active');
+      });
+    }
+    setTheme(localStorage.getItem('selectedTheme') || 'dark');
+
+    function copyIP() {
+      const ip = document.getElementById('server-ip').innerText;
+      navigator.clipboard.writeText(ip);
+      alert('IP адрес скопирован в буфер обмена!');
+    }
+
+    function openProfileModal() {
+      document.getElementById('profile-modal').classList.add('active');
+    }
+
+    function closeProfileModal() {
+      document.getElementById('profile-modal').classList.remove('active');
+    }
+
+    // ВСТАВЬТЕ СЮДА ВАШ CLIENT ID ИЗ DISCORD DEVELOPER PORTAL
+    const CLIENT_ID = 'ВАШ_DISCORD_CLIENT_ID'; 
+    const REDIRECT_URI = window.location.origin + window.location.pathname;
+
+    function loginWithDiscord() {
+      if (!CLIENT_ID || CLIENT_ID === 'ВАШ_DISCORD_CLIENT_ID') {
+        alert('Для настоящего перенаправления укажите ваш Client ID из Discord Developer Portal!');
+        return;
+      }
+
+      // Перенаправляет пользователя на официальную страницу авторизации Discord
+      const authUrl = `https://discord.com/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=identify`;
+      window.location.href = authUrl;
+    }
+
+    function logoutDiscord() {
+      localStorage.removeItem('discord_user');
+      closeProfileModal();
+      updateAuthUI();
+    }
+
+    // Обработка ответа от Discord после перенаправления
+    function handleDiscordCallback() {
+      const fragment = new URLSearchParams(window.location.hash.slice(1));
+      const accessToken = fragment.get('access_token');
+
+      if (accessToken) {
+        fetch('https://discord.com/api/users/@me', {
+          headers: { authorization: `Bearer ${accessToken}` }
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (data.username) {
+            const avatarUrl = data.avatar 
+              ? `https://cdn.discordapp.com/avatars/${data.id}/${data.avatar}.png` 
+              : `https://cdn.discordapp.com/embed/avatars/${(data.id >> 22) % 6}.png`;
+            
+            localStorage.setItem('discord_user', JSON.stringify({
+              username: data.global_name || data.username,
+              avatar: avatarUrl
+            }));
+            
+            // Очищаем хэш в URL адресе
+            history.replaceState(null, null, ' ');
+            updateAuthUI();
+          }
+        })
+        .catch(err => console.error('Ошибка входа через Discord:', err));
+      }
+    }
+
+    function updateAuthUI() {
+      const discordUser = JSON.parse(localStorage.getItem('discord_user'));
+      const discordBtn = document.getElementById('discord-login-btn');
+      const userBadge = document.getElementById('user-badge');
+
+      if (discordUser) {
+        discordBtn.style.display = 'none';
+        userBadge.style.display = 'flex';
+
+        document.getElementById('badge-username').innerText = discordUser.username;
+        document.getElementById('badge-avatar-img').src = discordUser.avatar;
+        document.getElementById('modal-avatar-preview').src = discordUser.avatar;
+        document.getElementById('nickname-input').value = discordUser.username;
+      } else {
+        discordBtn.style.display = 'flex';
+        userBadge.style.display = 'none';
+      }
+    }
+
+    window.onload = function() {
+      handleDiscordCallback();
+      updateAuthUI();
+    };
+  </script>
+</body>
+</html>
